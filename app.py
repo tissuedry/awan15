@@ -6,7 +6,7 @@ import time
 app = Flask(__name__)
 
 def get_db_connection():
-    # Mengambil kredensial dari Environment Variables di Portal Azure
+    # Menggunakan Environment Variables yang Anda buat di Azure
     conn_str = (
         f"Driver={{ODBC Driver 18 for SQL Server}};"
         f"Server={os.environ.get('DB_SERVER')};"
@@ -19,14 +19,9 @@ def get_db_connection():
 
 @app.route('/')
 def home():
+    # Mengambil ID Instance untuk membuktikan Autoscale sedang berjalan
     instance_id = os.environ.get('WEBSITE_INSTANCE_ID', 'Local-Machine')
-    return f"""
-    <h1>Website Cloud Computing - {instance_id}</h1>
-    <p>Status: Running on Indonesia Central</p>
-    <hr>
-    <a href='/db-test'>Cek Koneksi Database</a> | 
-    <a href='/stress'>Mulai Stress Test (Autoscale)</a>
-    """
+    return f"<h1>Web Berhasil Jalan!</h1><p>Instance ID: {instance_id}</p><br><a href='/db-test'>Cek Koneksi Database</a> | <a href='/stress'>Mulai Stress Test</a>"
 
 @app.route('/db-test')
 def db_test():
@@ -36,17 +31,17 @@ def db_test():
         cursor.execute("SELECT @@VERSION")
         row = cursor.fetchone()
         conn.close()
-        return f"<h1>Koneksi Berhasil!</h1><p>Versi DB: {row[0]}</p>"
+        return f"<h1>Koneksi DB Berhasil!</h1><p>Versi: {row[0]}</p>"
     except Exception as e:
-        return f"<h1>Koneksi Gagal</h1><p>Error: {str(e)}</p>"
+        return f"<h1>Koneksi DB Gagal</h1><p>Error: {str(e)}</p>"
 
 @app.route('/stress')
 def stress():
-    # Loop berat untuk memicu CPU > 70% agar Autoscale aktif
+    # Memicu CPU > 70% agar Autoscale menambah instance menjadi 3
     start = time.time()
-    while time.time() - start < 60:  # Berjalan selama 60 detik
-        _ = [x**2 for x in range(10000)]
-    return "<h1>Stress Test Selesai</h1><p>Periksa Instance Count di Azure Portal.</p>"
+    while time.time() - start < 60:
+        _ = [x**2 for x in range(5000)]
+    return "<h1>Stress Test Selesai</h1><p>Pantau portal Azure untuk melihat penambahan Instance Count.</p>"
 
 if __name__ == "__main__":
     app.run()
