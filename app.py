@@ -36,12 +36,14 @@ def db_test():
         return f"<h1>Koneksi DB Gagal</h1><p>Error: {str(e)}</p>"
 
 @app.route('/stress')
+@app.route('/stress')
 def stress():
-    # Memicu CPU > 70% agar Autoscale menambah instance menjadi 3
+    # Durasi diperpanjang jadi 300 detik (5 menit) agar terekam rata-rata Azure
+    # Intensitas dinaikkan dari 5.000 menjadi 500.000
     start = time.time()
-    while time.time() - start < 60:
-        _ = [x**2 for x in range(5000)]
-    return "<h1>Stress Test Selesai</h1><p>Pantau portal Azure untuk melihat penambahan Instance Count.</p>"
+    while time.time() - start < 300: 
+        _ = [x**2 for x in range(500000)]
+    return "<h1>Stress Test Berjalan</h1><p>Biarkan tab ini tetap terbuka selama 5 menit.</p>"
 
 if __name__ == "__main__":
     app.run()
