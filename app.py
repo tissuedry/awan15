@@ -36,14 +36,18 @@ def db_test():
         return f"<h1>Koneksi DB Gagal</h1><p>Error: {str(e)}</p>"
 
 @app.route('/stress')
-@app.route('/stress')
 def stress():
-    # Durasi diperpanjang jadi 300 detik (5 menit) agar terekam rata-rata Azure
-    # Intensitas dinaikkan dari 5.000 menjadi 500.000
-    start = time.time()
-    while time.time() - start < 300: 
-        _ = [x**2 for x in range(500000)]
-    return "<h1>Stress Test Berjalan oi</h1><p>Biarkan tab ini tetap terbuka selama 5 menit.</p>"
+    start_time = time.time()
+    duration = 300  # Set ke 5 menit (300 detik)
+    n = 500         # Nilai n untuk loop n^3
 
+    while time.time() - start_time < duration:
+        # Perulangan bersarang n^3 (Cubic Complexity)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    _ = i * j * k  # Operasi matematika untuk membebani CPU
+                    
+    return f"<h1>Stress Test n^3 Selesai</h1><p>Beban CPU tinggi selama 5 menit.</p>"
 if __name__ == "__main__":
     app.run()
