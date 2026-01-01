@@ -43,7 +43,7 @@ def stress():
     start = time.time()
     while time.time() - start < 300: 
         _ = [x**2 for x in range(500000)]
-    return "<h1>Stress Test Berjalan</h1><p>Biarkan tab ini tetap terbuka selama 5 menit.</p>"
+    return "<h1>Stress Test Berjalan oi</h1><p>Biarkan tab ini tetap terbuka selama 5 menit.</p>"
 
 if __name__ == "__main__":
     app.run()
